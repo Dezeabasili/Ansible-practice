@@ -1,0 +1,20 @@
+---
+# tasks file for ec2-creation
+- name: start an instance with a public IP address
+  # you can add the variables here
+  #vars: 
+    #instance_type: t2.micro
+  amazon.aws.ec2_instance:
+    name: "public-compute-03"
+    # key_name: "prod-ssh-key"
+    # vpc_subnet_id: subnet-5ca1ab1e
+    instance_type: "{{ instance_type }}"
+    security_group: default
+    region: us-east-1
+    aws_access_key: "{{ aws_access_key }}" # from vault as defined
+    aws_secret_key: "{{ aws_secret_key }}" # from vault as defined
+    network_interfaces:
+      - assign_public_ip: true
+    image_id: ami-0866a3c8686eaeeba
+    tags:
+      Environment: Testing
