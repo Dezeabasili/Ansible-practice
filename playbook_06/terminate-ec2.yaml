@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  tasks: 
+    # - name: print all the gathered facts
+    #   ansible.builtin.debug:
+    #     var: ansible_facts
+
+    - name: shut down ubuntu instances only
+      ansible.builtin.command:
+        /sbin/shutdown -t now
+      when:
+        ansible_facts['os_family'] == "Debian"
+    # The command above takes a minute to execute.
+    # Wait for a minute before confirming the state of the EC2 instance on AWS

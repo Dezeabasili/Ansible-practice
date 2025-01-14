@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  tasks: 
+    - name: create EC2 instances
+      amazon.aws.ec2_instance:
+        name: "ansible-node"
+        key_name: "Ansible-11Jan"
+        # vpc_subnet_id: subnet-5ca1ab1e
+        instance_type: "t2.micro"
+        security_group: default
+        region: us-east-1
+        aws_access_key: "{{ aws_access_key }}" # from vault as defined
+        aws_secret_key: "{{ aws_secret_key }}" # from vault as defined
+        network_interfaces:
+          - assign_public_ip: true
+        image_id: "{{ item }}"
+        tags:
+          Environment: Testing
+      loop:
+        - "ami-0453ec754f44f9a4a"
+        - "ami-0866a3c8686eaeeba"
+      
+
+

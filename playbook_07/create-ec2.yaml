@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: true
+  tasks: 
+    - name: check if openssh and openssl are up to date
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+        # update_cache: yes
+      loop:
+        - openssh
+        - openssl
+      when: ansible_facts['os_family'] == "Debian"
+      ignore_errors: yes
+
+    - name: verify if docker is installed
+      ansible.builtin.command: docker --version
+      register: output # store the output to a variable named output
+      ignore_errors: yes
+
+    # - name: display the result of the previous task
+    #   ansible.builtin.debug:
+    #     var: output
+  
+    - name: install docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+      when: output.failed
